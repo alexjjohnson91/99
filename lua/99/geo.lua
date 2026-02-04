@@ -239,7 +239,13 @@ function Range.from_visual_selection()
     local selected_lines =
       vim.api.nvim_buf_get_lines(buffer, start_r, end_row, false)
     end_row = start_r + #selected_lines
-    end_col = #selected_lines[#selected_lines]
+    --- another edge case, the buffer may be empty...
+    if #selected_lines == 0 then
+      --- an edge to the edge case. we are in 1 based indexing... f
+      end_col = 1
+    else
+      end_col = #selected_lines[#selected_lines]
+    end
     --- here is confusing part, we are now in 1 based values
     --- in the geo_spec test, this would result in end_row = 2, end_col = 8
     --- so, there is this -1 because we are going to go from 1 based to 0 based
